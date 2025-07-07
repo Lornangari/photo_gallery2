@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: photo-gallery
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn photo_gallery_project.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: photo_gallery_project.settings
+      - key: SECRET_KEY
+        value: django-insecure-ood15kx&0iw!zf7+^cjj*0jrj4(%!^k0*#0poj2wyx$#xa!2x9
+      - key: DEBUG
+        value: False
