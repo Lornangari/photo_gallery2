@@ -1,0 +1,42 @@
+{% extends 'photo_gallery/base.html' %}
+{% block title %}Gallery{% endblock %}
+{% block content %}
+
+<body class="bg-gray-50 p-6">
+    <h1 class="text-3xl font-bold mb-4">Photo Gallery</h1>
+
+    <div class="mb-4">
+        <a href="{% url 'upload' %}" class="text-white bg-blue-500 px-4 py-2 rounded">Upload New Photo</a>
+    </div>
+
+    <div class="mb-4">
+        <strong>Filter by Tag:</strong>
+        {% for tag in tags %}
+            <a href="?tag={{ tag.name }}" class="text-blue-600 underline mr-2">{{ tag.name }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {% for photo in photos %}
+            <div class="bg-white p-4 shadow rounded">
+                <img src="{{ photo.image.url }}" alt="{{ photo.title }}" class="w-full h-48 object-cover rounded">
+                <h2 class="text-xl font-semibold mt-2">{{ photo.title }}</h2>
+                <p class="text-sm text-gray-600">{{ photo.description|truncatewords:15 }}</p>
+                <div class="text-sm text-gray-500 mt-1">
+                    Tags: 
+                    {% for tag in photo.tags.all %}
+                        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </div>
+                <form method="post" action="{% url 'like' photo.id %}">
+                    {% csrf_token %}
+                    <button class="mt-2 text-sm bg-pink-500 text-white px-3 py-1 rounded">
+                        ❤️ {{ photo.total_likes }} Like{% if photo.total_likes != 1 %}s{% endif %}
+                    </button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+
+
+{% endblock %}
